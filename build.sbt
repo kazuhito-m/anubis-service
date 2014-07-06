@@ -7,8 +7,8 @@ version := "0.0.1"
 scalaVersion := "2.11.1"
 
 libraryDependencies ++= Seq(
-  "org.specs2" %% "specs2" % "2.3.7" % "test",
-  "org.rogach" %% "scallop" % "0.9.4"
+  "org.specs2" %% "specs2" % "2.3.11" % "test",
+  "org.rogach" %% "scallop" % "0.9.5"
 )
 
 scalacOptions in Test ++= Seq("-Yrangepos")
