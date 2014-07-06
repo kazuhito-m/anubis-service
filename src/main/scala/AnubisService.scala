@@ -2,6 +2,7 @@ package com.github.kazuhito_m.anubisservice
 
 import org.rogach.scallop._
 
+
 class AnubisServiceConf(arguments: Seq[String]) extends ScallopConf(arguments) {
   version("AnubisService 0.0.1 (c) 2014 Kazuhito Miura")
   banner("うるせ〜ｗ")
@@ -15,9 +16,8 @@ class AnubisServiceConf(arguments: Seq[String]) extends ScallopConf(arguments) {
 object AnubisService {
   def main(args: Array[String]){
     val conf = new AnubisServiceConf(args)
-
-    println(conf.convertType)
-    println(conf.source)
+    val result = Converter.convertCsvToHtml(conf.source.toString())
+    println(result)
   }
 }
 
