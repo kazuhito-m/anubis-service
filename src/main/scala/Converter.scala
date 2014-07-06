@@ -26,21 +26,18 @@ object Converter {
       if (!v1.isEmpty) {
         // 引数に指定されたCellの子どもを文字列で検索し、あればそれを、なければ新しく追加しつつ取得。
         val v: String = v1.head
-        val children = parentCell.children
-        val currentCell = if (children.contains(v)) children(v) else Cell(v, mutable.LinkedHashMap[String, Cell]())
-        children(v) = currentCell // 既にあった場合は「取得してセットし直す」という気色悪い挙動… TODO 余裕できたら治す。
+        val c = parentCell.children
+        val hit = if (c.contains(v)) c(v) else Cell(v, mutable.LinkedHashMap[String, Cell]())
+        c(v) = hit // 既にあった場合は「取得してセットし直す」という気色悪い挙動… TODO 余裕できたら治す。
         // List側を一つ前に進め、Cell側は子どもの代へと移行し、再帰
-        createTree(v1.tail, currentCell)
+        createTree(v1.tail, hit)
       }
       return parentCell
     }
 
     // Cell構造作成処理
     val root = Cell("root", mutable.LinkedHashMap[String, Cell]())
-    values.foreach {
-      v =>
-        createTree(v, root)
-    }
+    values.foreach { createTree(_, root) }
 
     return root
   }
