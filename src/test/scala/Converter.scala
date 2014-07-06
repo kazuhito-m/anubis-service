@@ -4,8 +4,7 @@ package com.github.kazuhito_m.anubisservice
 
 import org.specs2.mutable._
 import scala.collection.mutable.LinkedHashMap
-import scala.collection.immutable.TreeMap
-import org.specs2.matcher.ValueCheck.valueIsTypedValueCheck
+import scala.collection.mutable
 
 
 class ConverterSpec extends Specification {
@@ -49,52 +48,81 @@ class ConverterSpec extends Specification {
 
         val base = List(
           List("11","12","13","14")
-          , List("11","12","13","Other")
+          , List("11","12","13","other")
           , List("11","12","16","17")
           , List("11","18","19","20")
           , List("11","other","20","21")
           , List("other","12","19","17")
         )
 
-        val expected = LinkedHashMap(
-          "11"->LinkedHashMap(
-            "12"->LinkedHashMap(
-              "13"->LinkedHashMap(
-                "other"->LinkedHashMap()
-                ,"14"->LinkedHashMap()
+
+        val expectedSeed = Map(
+          "11"->Map(
+            "12"->Map(
+              "13"->Map(
+                "14"->Map()
+                ,        "other"->Map()
               )
-              ,"16"->LinkedHashMap(
-                "17"->LinkedHashMap()
-              )
-            )
-            ,"18"->LinkedHashMap(
-              "19"->LinkedHashMap(
-                "20"->LinkedHashMap()
+              ,"16"->Map(
+                "17"->Map()
               )
             )
-            ,"other"->LinkedHashMap(
-              "20"->LinkedHashMap(
-                "21"->LinkedHashMap()
+            ,"18"->Map(
+              "19"->Map(
+                "20"->Map()
               )
             )
-            ,"other"->LinkedHashMap(
-              "12"->LinkedHashMap(
-                "19"->LinkedHashMap(
-                  "20"->LinkedHashMap()
-                )
+            ,"other"->Map(
+              "20"->Map(
+                "21"->Map()
+              )
+            )
+          )
+          ,"other"->Map(
+            "12"->Map(
+              "19"->Map(
+                "17"->Map()
               )
             )
           )
         )
-        
-        println(expected)
 
-        val actual = Converter.valueListToAbstructDatas(base)
+        // 上記のMapの構造を、Cell型に投影する。
+        def convertMapToCells(lhMap:Map[String,Any],targetCell:Cell):Cell = {
+          // Map内を全て回す。
+          lhMap.foreach{case (key:String, value:Map[String,Any]) =>
+            // Mapに要素があれば、Cellを作り、大本のCellに追加する。
+            val newCell = Cell(key , new mutable.LinkedHashMap[String,Cell])
+            targetCell.children += (key -> newCell)
+            // 下に要素があるようであれば、再帰で呼び出す。
+            convertMapToCells(value, newCell)
+          }
+          return targetCell
+        }
+        
+        // 逆変換、CellをMapへ投影
+        def convertCellsToMap(srcCells:Cell):Map[String,Any] = {
+          var r = Map[String,Any]()
+          srcCells.children.values.foreach { cell:Cell =>
+            r = r.updated(cell.value , convertCellsToMap(cell))
+          }
+          return r
+        }
+       
+
+        // 空のCellを材料に、Mapを投影する。
+        val expected = convertMapToCells(expectedSeed,Cell("root",new mutable.LinkedHashMap[String,Cell]))
+
+        //  Test対象の実行。
+        val result = Converter.valueListToAbstructDatas(base)
+
+
+        // 確認物を同じ土俵に上げるため、再度ピュアMapにコンバート
+        val actual = convertCellsToMap(result)
 
         // TODO ネストして行くようなTree構造の時の「型の定義」ってどうするのか。
-//        actual = expected
+        actual == expectedSeed
 
-        true
       }
     }
 
