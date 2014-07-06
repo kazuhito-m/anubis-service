@@ -5,6 +5,7 @@ package com.github.kazuhito_m.anubisservice
 import org.specs2.mutable._
 import scala.collection.mutable.LinkedHashMap
 import scala.collection.immutable.TreeMap
+import org.specs2.matcher.ValueCheck.valueIsTypedValueCheck
 
 
 class ConverterSpec extends Specification {
@@ -85,6 +86,8 @@ class ConverterSpec extends Specification {
             )
           )
         )
+        
+        println(expected)
 
         val actual = Converter.valueListToAbstructDatas(base)
 

@@ -10,8 +10,6 @@ import scala.collection.immutable.TreeMap
  */
 object Converter {
 
-
-
   def convertCsvToHtml(csvFile: String): String = {
     return csvFile
   }
