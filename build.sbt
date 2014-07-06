@@ -1,4 +1,4 @@
-name := "Anubis Service"
+name := "anubis-service"
 
 organization := "com.github.kazuhito_m"
 
@@ -23,3 +23,5 @@ initialCommands := "import com.github.kazuhito_m.anubisservice._"
 ideaExcludeFolders += ".idea"
 
 ideaExcludeFolders += ".idea_modules"
+
+assemblySettings
