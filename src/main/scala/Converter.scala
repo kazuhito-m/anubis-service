@@ -4,7 +4,6 @@ import scala.io.Source
 import scala.Predef._
 import scala.collection.mutable
 
-
 /**
  * Created by kazuhito on 14/07/07.
  */
@@ -32,15 +31,21 @@ object Converter {
         // List側を一つ前に進め、Cell側は子どもの代へと移行し、再帰
         createTree(parts.tail, hit)
       }
-      return parentCell
+      parentCell
     }
 
     // Cell構造作成処理
     val root = Cell("root", mutable.LinkedHashMap[String, Cell]())
     values.foreach { createTree(_, root) }
 
-    return root
+    root
   }
+
+  def analyzeEndCellCount(cell: Cell) : Int = {
+    // TODO 仮実装
+    5
+  }
+
 
 }
 
