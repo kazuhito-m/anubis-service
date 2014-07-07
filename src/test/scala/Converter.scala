@@ -150,7 +150,7 @@ class ConverterSpec extends Specification {
             </tr>
             <tr>
               <td>other</td>
-              <td>20</td>
+              <td>19</td>
               <td>21</td>
             </tr>
             <tr>
