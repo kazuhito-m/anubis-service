@@ -132,21 +132,30 @@ class ConverterSpec extends Specification {
       // Test対象の実行
       val actual = Converter.analyzeEndCellCount(baseTree)
 
-      actual must equalTo(5)
+      actual must equalTo(6)
 
     }
 
     "Cell型のツリー上から「自分から繋がる末端データ」を途中からでも出せる" in {
       // 元となるツリーデータを取得
       val baseTree = convertMapToCells(treeTextMap, createRootCell)
-      val enRouteTree = baseTree.children("11") // 途中からのツリー
 
-      // Test対象の実行
-      val actual = Converter.analyzeEndCellCount(enRouteTree)
+      def enRouteItemTest(key:String , expected:Int) = {
 
-      // TODO 仮実装
-      //      actual must equalTo(4)
-      true
+        val enRouteTree = baseTree.children(key) // 途中からのツリー
+
+        // Test対象の実行
+        val actual = Converter.analyzeEndCellCount(enRouteTree)
+
+        actual must equalTo(expected)
+
+      }
+
+      // パラメトリックテストっぽい何か。
+      // TODO もうちょっと習熟したら綺麗な方法に書き換えたい
+      enRouteItemTest("11" , 5)
+      enRouteItemTest("other" , 1)
+
     }
 
 

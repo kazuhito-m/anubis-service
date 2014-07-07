@@ -41,9 +41,18 @@ object Converter {
     root
   }
 
-  def analyzeEndCellCount(cell: Cell) : Int = {
-    // TODO 仮実装
-    5
+  /**
+   * Cell型オブジェクトのツリー内から「末端となるCellオブジェクトがいくつあるか」を返す。
+   * (HTMLのRowspanを求めることを視野に入れたメソッド)
+   *
+   * 再帰的にツリーの中を泳いでいき、末端Cellを見つけた場合"1"と評価し、それを合算していく。
+   *
+   * @param rootCell 検査対象のCellツリーオブジェクト。
+   * @return 末端となるCellがいくつぶら下がっているか。
+   */
+  def analyzeEndCellCount(rootCell: Cell) : Int = {
+    val map = rootCell.children
+    return if (map.isEmpty) 1 else map.values.foldLeft(0){ (count,item) => count + analyzeEndCellCount(item) }
   }
 
 
