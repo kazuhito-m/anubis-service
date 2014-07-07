@@ -9,6 +9,65 @@ import scala.collection.mutable
 
 class ConverterSpec extends Specification {
 
+  // Test Datas
+
+  val csvTextList = List(
+    List("11","12","13","14")
+    , List("11","12","13","other")
+    , List("11","12","16","17")
+    , List("11","18","19","20")
+    , List("11","other","20","21")
+    , List("other","12","19","17")
+  )
+
+  val treeTextMap = Map(
+    "11"->Map(
+      "12"->Map(
+        "13"->Map(
+          "14"->Map()
+          ,        "other"->Map()
+        )
+        ,"16"->Map(
+          "17"->Map()
+        )
+      )
+      ,"18"->Map(
+        "19"->Map(
+          "20"->Map()
+        )
+      )
+      ,"other"->Map(
+        "20"->Map(
+          "21"->Map()
+        )
+      )
+    )
+    ,"other"->Map(
+      "12"->Map(
+        "19"->Map(
+          "17"->Map()
+        )
+      )
+    )
+  )
+
+  // Utility Method for Test
+
+  // Mapの構造を、Cell型に投影する。
+  def convertMapToCells(lhMap:Map[String,Any],targetCell:Cell):Cell = {
+    // Map内を全て回す。
+    lhMap.foreach{case (key:String, value:Map[String,Any]) =>
+      // Mapに要素があれば、Cellを作り、大本のCellに追加する。
+      val newCell = Cell(key , new mutable.LinkedHashMap[String,Cell])
+      targetCell.children += (key -> newCell)
+      // 下に要素があるようであれば、再帰で呼び出す。
+      convertMapToCells(value, newCell)
+    }
+    return targetCell
+  }
+
+  // Tests
+
   "コンバーターでファイルを読む" should {
     "ファイル指定で読み込みリストに格納" in {
       val csv = "target/scala-2.11/test-classes/Data.csv"
@@ -46,66 +105,12 @@ class ConverterSpec extends Specification {
     "値の行列から抽象データ型へ変換" should {
       "グルーピングをしたツリー作成" in {
 
-        val base = List(
-          List("11","12","13","14")
-          , List("11","12","13","other")
-          , List("11","12","16","17")
-          , List("11","18","19","20")
-          , List("11","other","20","21")
-          , List("other","12","19","17")
-        )
-
-
-        val expectedSeed = Map(
-          "11"->Map(
-            "12"->Map(
-              "13"->Map(
-                "14"->Map()
-                ,        "other"->Map()
-              )
-              ,"16"->Map(
-                "17"->Map()
-              )
-            )
-            ,"18"->Map(
-              "19"->Map(
-                "20"->Map()
-              )
-            )
-            ,"other"->Map(
-              "20"->Map(
-                "21"->Map()
-              )
-            )
-          )
-          ,"other"->Map(
-              "12"->Map(
-              "19"->Map(
-                "17"->Map()
-              )
-            )
-          )
-        )
-
-        // 上記のMapの構造を、Cell型に投影する。
-        def convertMapToCells(lhMap:Map[String,Any],targetCell:Cell):Cell = {
-          // Map内を全て回す。
-          lhMap.foreach{case (key:String, value:Map[String,Any]) =>
-            // Mapに要素があれば、Cellを作り、大本のCellに追加する。
-            val newCell = Cell(key , new mutable.LinkedHashMap[String,Cell])
-            targetCell.children += (key -> newCell)
-            // 下に要素があるようであれば、再帰で呼び出す。
-            convertMapToCells(value, newCell)
-          }
-          return targetCell
-        }
-        
-
-        // 空のCellを材料に、Mapを投影する。
-        val expected = convertMapToCells(expectedSeed,Cell("root",new mutable.LinkedHashMap[String,Cell]))
+       // 空のCellを材料に、Mapを投影する。
+        val rootCell = Cell("root",new mutable.LinkedHashMap[String,Cell])
+        val expected = convertMapToCells(treeTextMap,rootCell)
 
         //  Test対象の実行。
-        val actual = Converter.valueListToAbstructDatas(base)
+        val actual = Converter.valueListToAbstructDatas(csvTextList)
 
         // オブジェクトのツリー構造を比較(==の比較能力に依存)
         actual == expected
