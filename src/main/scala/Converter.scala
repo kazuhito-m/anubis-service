@@ -22,15 +22,15 @@ object Converter {
 
   def valueListToAbstructDatas(values: List[List[String]]): Cell = {
 
-    def createTree(v1: List[String], parentCell: Cell): Cell = {
-      if (!v1.isEmpty) {
+    def createTree(parts: List[String], parentCell: Cell): Cell = {
+      if (!parts.isEmpty) {
         // 引数に指定されたCellの子どもを文字列で検索し、あればそれを、なければ新しく追加しつつ取得。
-        val v: String = v1.head
-        val c = parentCell.children
-        val hit = if (c.contains(v)) c(v) else Cell(v, mutable.LinkedHashMap[String, Cell]())
-        c(v) = hit // 既にあった場合は「取得してセットし直す」という気色悪い挙動… TODO 余裕できたら治す。
+        val firstValue: String = parts.head
+        val node = parentCell.children
+        val hit = if (node.contains(firstValue)) node(firstValue) else Cell(firstValue, mutable.LinkedHashMap[String, Cell]())
+        node(firstValue) = hit // 既にあった場合は「取得してセットし直す」という気色悪い挙動… TODO 余裕できたら治す。
         // List側を一つ前に進め、Cell側は子どもの代へと移行し、再帰
-        createTree(v1.tail, hit)
+        createTree(parts.tail, hit)
       }
       return parentCell
     }
