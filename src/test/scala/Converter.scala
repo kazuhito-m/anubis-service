@@ -12,7 +12,7 @@ class ConverterSpec extends Specification {
     , List("11", "12", "13", "other")
     , List("11", "12", "16", "17")
     , List("11", "18", "19", "20")
-    , List("11", "other", "20", "21")
+    , List("11", "other", "19", "21")
     , List("other", "12", "19", "17")
   )
 
@@ -33,7 +33,7 @@ class ConverterSpec extends Specification {
         )
       )
       , "other" -> Map(
-        "20" -> Map(
+        "19" -> Map(
           "21" -> Map()
         )
       )
@@ -121,8 +121,9 @@ class ConverterSpec extends Specification {
 
   "抽象データ型からHTMLに変換する" should {
     "Cell型オブジェク卜の内部ツリーからHTMLのテキストへ" in {
-      // TODO
+
       true
+
     }
 
     "Cell型のツリー上から「自分から繋がる末端データはいくつあるか」を調べる" in {
@@ -140,7 +141,7 @@ class ConverterSpec extends Specification {
       // 元となるツリーデータを取得
       val baseTree = convertMapToCells(treeTextMap, createRootCell)
 
-      def enRouteItemTest(key:String , expected:Int) = {
+      def enRouteItemTest(key: String, expected: Int) = {
 
         val enRouteTree = baseTree.children(key) // 途中からのツリー
 
@@ -153,8 +154,8 @@ class ConverterSpec extends Specification {
 
       // パラメトリックテストっぽい何か。
       // TODO もうちょっと習熟したら綺麗な方法に書き換えたい
-      enRouteItemTest("11" , 5)
-      enRouteItemTest("other" , 1)
+      enRouteItemTest("11", 5)
+      enRouteItemTest("other", 1)
 
     }
 

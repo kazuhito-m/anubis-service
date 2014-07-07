@@ -52,10 +52,18 @@ object Converter {
    */
   def analyzeEndCellCount(rootCell: Cell) : Int = {
     val map = rootCell.children
-    return if (map.isEmpty) 1 else map.values.foldLeft(0){ (count,item) => count + analyzeEndCellCount(item) }
+    if (map.isEmpty) 1 else map.values.foldLeft(0){ (count,item) => count + analyzeEndCellCount(item) }
   }
 
+  def makeHtmlByAbstructDatas(rootCell:Cell):String = {
+    ""
+  }
 
 }
 
+/**
+ * 抽象データを表すケースクラス。
+ * @param value データの値(文字列)。
+ * @param children 表中、右側にぶら下がるデータ。グルーピングされているなら複数ぶら下がる。
+ */
 case class Cell(value: String, children: mutable.LinkedHashMap[String, Cell])
