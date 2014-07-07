@@ -1,11 +1,8 @@
 package com.github.kazuhito_m.anubisservice
 
-
-
 import org.specs2.mutable._
 import scala.collection.mutable.LinkedHashMap
 import scala.collection.mutable
-
 
 class ConverterSpec extends Specification {
 
@@ -63,7 +60,7 @@ class ConverterSpec extends Specification {
       // 下に要素があるようであれば、再帰で呼び出す。
       convertMapToCells(value, newCell)
     }
-    return targetCell
+    targetCell
   }
 
   // Tests
@@ -98,7 +95,7 @@ class ConverterSpec extends Specification {
 
         val actual = Converter.csvListToValueList(base)
 
-        actual == expected
+        actual must equalTo(expected)
       }
     }
 
@@ -113,7 +110,7 @@ class ConverterSpec extends Specification {
         val actual = Converter.valueListToAbstructDatas(csvTextList)
 
         // オブジェクトのツリー構造を比較(==の比較能力に依存)
-        actual == expected
+        actual must equalTo(expected)
 
       }
     }
