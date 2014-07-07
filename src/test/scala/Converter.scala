@@ -2,6 +2,7 @@ package com.github.kazuhito_m.anubisservice
 
 import org.specs2.mutable._
 import scala.collection.mutable
+import scala.xml.XML
 
 class ConverterSpec extends Specification {
 
@@ -122,7 +123,57 @@ class ConverterSpec extends Specification {
   "抽象データ型からHTMLに変換する" should {
     "Cell型オブジェク卜の内部ツリーからHTMLのテキストへ" in {
 
-      true
+      // HTMLの元となるデータ
+      val baseTree = convertMapToCells(treeTextMap, createRootCell)
+
+      // 確認用のHTML(ScalaのXMLオブジェクト)
+      val expected = <html>
+        <body>
+          <table border="1">
+            <tr>
+              <td rowspan="5">11</td>
+              <td rowspan="3">12</td>
+              <td rowspan="2">13</td>
+              <td>14</td>
+            </tr>
+            <tr>
+              <td>other</td>
+            </tr>
+            <tr>
+              <td>16</td>
+              <td>17</td>
+            </tr>
+            <tr>
+              <td>18</td>
+              <td>19</td>
+              <td>20</td>
+            </tr>
+            <tr>
+              <td>other</td>
+              <td>20</td>
+              <td>21</td>
+            </tr>
+            <tr>
+              <td>other</td>
+              <td>12</td>
+              <td>19</td>
+              <td>17</td>
+            </tr>
+          </table>
+        </body>
+      </html>
+
+      // テスト対象を実行。
+      val actualString = Converter.makeHtmlByAbstructDatas(baseTree)
+
+      println("makeHtmlByAbstructDatas()が返しているHTML文字列")
+      println(actualString)
+
+      // 結果をXMLにコンバート
+      val actual = XML.loadString(actualString)
+
+      // 結果確認
+      actual must equalTo(expected)
 
     }
 
