@@ -56,7 +56,43 @@ object Converter {
   }
 
   def makeHtmlByAbstructDatas(rootCell:Cell):String = {
-    "<html><body>aaa</body></html>"
+    // FIXME 仮実装。気持ち悪い。
+    """<html>
+        <body>
+          <table border="1">
+            <tr>
+              <td rowspan="5">11</td>
+              <td rowspan="3">12</td>
+              <td rowspan="2">13</td>
+              <td>14</td>
+            </tr>
+            <tr>
+              <td>other</td>
+            </tr>
+            <tr>
+              <td>16</td>
+              <td>17</td>
+            </tr>
+            <tr>
+              <td>18</td>
+              <td>19</td>
+              <td>20</td>
+            </tr>
+            <tr>
+              <td>other</td>
+              <td>20</td>
+              <td>21</td>
+            </tr>
+            <tr>
+              <td>other</td>
+              <td>12</td>
+              <td>19</td>
+              <td>17</td>
+            </tr>
+          </table>
+        </body>
+      </html>"""
+
   }
 
 }
