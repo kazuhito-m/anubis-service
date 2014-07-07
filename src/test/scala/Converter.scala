@@ -79,7 +79,7 @@ class ConverterSpec extends Specification {
             )
           )
           ,"other"->Map(
-            "12"->Map(
+              "12"->Map(
               "19"->Map(
                 "17"->Map()
               )
@@ -100,28 +100,15 @@ class ConverterSpec extends Specification {
           return targetCell
         }
         
-        // 逆変換、CellをMapへ投影
-        def convertCellsToMap(srcCells:Cell):Map[String,Any] = {
-          var r = Map[String,Any]()
-          srcCells.children.values.foreach { cell:Cell =>
-            r = r.updated(cell.value , convertCellsToMap(cell))
-          }
-          return r
-        }
-       
 
         // 空のCellを材料に、Mapを投影する。
         val expected = convertMapToCells(expectedSeed,Cell("root",new mutable.LinkedHashMap[String,Cell]))
 
         //  Test対象の実行。
-        val result = Converter.valueListToAbstructDatas(base)
+        val actual = Converter.valueListToAbstructDatas(base)
 
-
-        // 確認物を同じ土俵に上げるため、再度ピュアMapにコンバート
-        val actual = convertCellsToMap(result)
-
-        // TODO ネストして行くようなTree構造の時の「型の定義」ってどうするのか。
-        actual == expectedSeed
+        // オブジェクトのツリー構造を比較(==の比較能力に依存)
+        actual == expected
 
       }
     }
