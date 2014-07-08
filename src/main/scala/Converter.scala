@@ -5,6 +5,13 @@ import scala.Predef._
 import scala.collection.mutable
 
 /**
+ * 抽象データを表すケースクラス。
+ * @param value データの値(文字列)。
+ * @param children 表中、右側にぶら下がるデータ。グルーピングされているなら複数ぶら下がる。
+ */
+case class Cell(value: String, children: mutable.LinkedHashMap[String, Cell])
+
+/**
  * Created by kazuhito on 14/07/07.
  */
 object Converter {
@@ -19,7 +26,7 @@ object Converter {
 
   def csvListToValueList(csvList: List[String]): List[List[String]] = csvList.map(line => line.split(",|\n").toList)
 
-  def valueListToAbstructDatas(values: List[List[String]]): Cell = {
+  def valueListToAbstractDatas(values: List[List[String]]): Cell = {
 
     def createTree(parts: List[String], parentCell: Cell): Cell = {
       if (!parts.isEmpty) {
@@ -55,37 +62,29 @@ object Converter {
     if (map.isEmpty) 1 else map.values.foldLeft(0){ (count,item) => count + analyzeEndCellCount(item) }
   }
 
-  def createTableDetail(cell:Cell):String = {
-    val map = cell.children
-    val trTags = if (map.isEmpty) "</tr>\n<tr>\n" else ""
+  def getLastCell(cell: Cell) : Cell = cell.children.values.foldLeft(cell){ (last,cur) => getLastCell(cur) }
 
+  def createTableDetail(cell:Cell , lastCell:Cell):String = {
+    // </tr><tr> の判定と作成(最後の値の時は書かない)
+    val map = cell.children
+    val trTags = if (map.isEmpty && cell != lastCell) "</tr>\n<tr>\n" else ""
+    // <td>タグのrowspan作成
     val rowSpanCount = analyzeEndCellCount(cell)
     val rs = if (rowSpanCount > 1) " rowspan=\"" + rowSpanCount + "\"" else ""
+    // 値部作成（一段目は無視)
     val tdTag = if (cell.value == "root") "" else  "  <td" + rs + ">" + cell.value + "</td>\n"
-
-    tdTag + trTags + map.values.foldLeft(""){ (html,item) => html + createTableDetail(item) }
-
+    // 組立とreturn
+    tdTag + trTags + map.values.foldLeft(""){ (html,item) => html + createTableDetail(item,lastCell) }
   }
 
-  def getLastCell(cell: Cell) : Cell = cell.children.values.foldLeft(cell){ (last,cur) => getLastCell(cur)}
-
-def makeHtmlByAbstructDatas(rootCell:Cell):String = {
+  def makeHtmlByAbstractDatas(rootCell:Cell):String =
     """<html>
         <body>
           <table border="1">
             <tr>
-""" + createTableDetail(rootCell) + """
-            </tr>
+""" + createTableDetail(rootCell,getLastCell(rootCell)) + """</tr>
           </table>
         </body>
       </html>"""
-  }
 
 }
-
-/**
- * 抽象データを表すケースクラス。
- * @param value データの値(文字列)。
- * @param children 表中、右側にぶら下がるデータ。グルーピングされているなら複数ぶら下がる。
- */
-case class Cell(value: String, children: mutable.LinkedHashMap[String, Cell])

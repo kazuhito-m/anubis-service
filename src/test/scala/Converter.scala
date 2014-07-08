@@ -148,7 +148,7 @@ class ConverterSpec extends Specification {
       val expected = convertMapToCells(treeTextMap, createRootCell)
 
       //  Test対象の実行。
-      val actual = Converter.valueListToAbstructDatas(csvTextList)
+      val actual = Converter.valueListToAbstractDatas(csvTextList)
 
       // オブジェクトのツリー構造を比較(==の比較能力に依存)
       actual must equalTo(expected)
@@ -163,13 +163,10 @@ class ConverterSpec extends Specification {
       val baseTree = convertMapToCells(treeTextMap, createRootCell)
 
       // 確認用のHTML(ScalaのXMLオブジェクト)
-      val expected = resultlHtml
+      val expected = resultlHtml // XMLオブジェクトはそのまま比較すると空白などにも敏感に比較するので整え
 
       // テスト対象を実行。
-      val actualString = Converter.makeHtmlByAbstructDatas(baseTree)
-
-      println("makeHtmlByAbstructDatas()が返しているHTML文字列")
-      println(actualString)
+      val actualString = Converter.makeHtmlByAbstractDatas(baseTree)
 
       // 結果をXMLにコンバート
       val actual = XML.loadString(actualString)
