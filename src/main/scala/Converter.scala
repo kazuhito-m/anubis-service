@@ -67,10 +67,9 @@ object Converter {
 
   }
 
-  def getLastCell(cell: Cell) : Cell = null
+  def getLastCell(cell: Cell) : Cell = cell.children.values.foldLeft(cell){ (last,cur) => getLastCell(cur)}
 
-
-  def makeHtmlByAbstructDatas(rootCell:Cell):String = {
+def makeHtmlByAbstructDatas(rootCell:Cell):String = {
     """<html>
         <body>
           <table border="1">
