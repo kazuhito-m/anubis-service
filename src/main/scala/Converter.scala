@@ -16,6 +16,12 @@ case class Cell(value: String, children: mutable.LinkedHashMap[String, Cell])
  */
 object Converter {
 
+  /**
+   * メインメソッド。
+   * 引数に渡されたCSVファイルパスから読み込み、HTMLの文字列へと変換し返す。
+   * @param csvFile 変換対象となるファイルパス。
+   * @return 変換結果のHTML文字列。
+   */
   def convertCsvToHtml(csvFile: String): String = {
     val textList = loadFileToList(csvFile)
     val sortedTextList = specialSort(textList)
@@ -83,10 +89,11 @@ object Converter {
 
   def makeHtmlByAbstractDatas(rootCell:Cell):String =
     """<html>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         <body>
           <table border="1">
             <tr>
-""" + createTableDetail(rootCell,getLastCell(rootCell)) + """</tr>
+    """ + createTableDetail(rootCell,getLastCell(rootCell)) + """</tr>
           </table>
         </body>
       </html>"""

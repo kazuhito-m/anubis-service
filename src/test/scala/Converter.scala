@@ -54,7 +54,8 @@ class ConverterSpec extends Specification {
     )
   )
 
-  val resultlHtml = <html>
+  val resultHtml = <html>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <body>
       <table border="1">
         <tr>
@@ -170,7 +171,7 @@ class ConverterSpec extends Specification {
       val baseTree = createBaseTreeForTest()
 
       // 確認用のHTML(ScalaのXMLオブジェクト)
-      val expected = Utility.trim(resultlHtml) // XMLオブジェクトはそのまま比較すると空白などにも敏感に比較するので整え
+      val expected = Utility.trim(resultHtml) // XMLオブジェクトはそのまま比較すると空白などにも敏感に比較するので整え
 
       // テスト対象を実行。
       val actualString = Converter.makeHtmlByAbstractDatas(baseTree)
