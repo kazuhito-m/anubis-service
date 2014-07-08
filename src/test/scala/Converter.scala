@@ -3,6 +3,7 @@ package com.github.kazuhito_m.anubisservice
 import org.specs2.mutable._
 import scala.collection.mutable
 import scala.xml.XML
+import scala.xml.Utility
 
 class ConverterSpec extends Specification {
 
@@ -163,13 +164,13 @@ class ConverterSpec extends Specification {
       val baseTree = convertMapToCells(treeTextMap, createRootCell)
 
       // 確認用のHTML(ScalaのXMLオブジェクト)
-      val expected = resultlHtml // XMLオブジェクトはそのまま比較すると空白などにも敏感に比較するので整え
+      val expected = Utility.trim(resultlHtml) // XMLオブジェクトはそのまま比較すると空白などにも敏感に比較するので整え
 
       // テスト対象を実行。
       val actualString = Converter.makeHtmlByAbstractDatas(baseTree)
 
       // 結果をXMLにコンバート
-      val actual = XML.loadString(actualString)
+      val actual = Utility.trim(XML.loadString(actualString))
 
       // 結果確認
       actual must equalTo(expected)
