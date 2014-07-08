@@ -17,15 +17,11 @@ case class Cell(value: String, children: mutable.LinkedHashMap[String, Cell])
 object Converter {
 
   def convertCsvToHtml(csvFile: String): String = {
-    // TODO 仮実装 まぁ、しょうが無いわな
-    """<html>
-<body>
-<table border="1">
-  <tr>
-  </tr>
-</table>
-</body>
-</html>"""
+    val textList = loadFileToList(csvFile)
+    val sortedTextList = specialSort(textList)
+    val valueList = csvListToValueList(sortedTextList)
+    val abstractDatas = valueListToAbstractDatas(valueList)
+    makeHtmlByAbstractDatas(abstractDatas)
   }
 
   def loadFileToList(filePath: String): List[String] = Source.fromFile(filePath).getLines().toList
