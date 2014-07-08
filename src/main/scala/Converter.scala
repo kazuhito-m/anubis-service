@@ -26,8 +26,8 @@ object Converter {
     val textList = loadFileToList(csvFile)
     val sortedTextList = specialSort(textList)
     val valueList = csvListToValueList(sortedTextList)
-    val abstractDatas = valueListToAbstractDatas(valueList)
-    makeHtmlByAbstractDatas(abstractDatas)
+    val abstractData = valueListToAbstractData(valueList)
+    makeHtmlByAbstractDatas(abstractData)
   }
 
   def loadFileToList(filePath: String): List[String] = Source.fromFile(filePath).getLines().toList
@@ -36,7 +36,7 @@ object Converter {
 
   def csvListToValueList(csvList: List[String]): List[List[String]] = csvList.map(line => line.split(",|\n").toList)
 
-  def valueListToAbstractDatas(values: List[List[String]]): Cell = {
+  def valueListToAbstractData(values: List[List[String]]): Cell = {
 
     def createTree(parts: List[String], parentCell: Cell): Cell = {
       if (!parts.isEmpty) {

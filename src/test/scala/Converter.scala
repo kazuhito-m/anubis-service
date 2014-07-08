@@ -156,7 +156,7 @@ class ConverterSpec extends Specification {
       val expected = createBaseTreeForTest()
 
       //  Test対象の実行。
-      val actual = Converter.valueListToAbstractDatas(csvTextList)
+      val actual = Converter.valueListToAbstractData(csvTextList)
 
       // オブジェクトのツリー構造を比較(==の比較能力に依存)
       actual must equalTo(expected)
