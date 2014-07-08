@@ -9,5 +9,5 @@ A plan to grow up as "a general-purpose data conversion program."
 
 ## author
 
-Kazuhito Miura ( @kazuhito_m )
+Kazuhito Miura ( [@kazuhito_m](https://twitter.com/kazuhito_m "kazuhito_m on Twitter") )
 
