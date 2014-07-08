@@ -67,6 +67,9 @@ object Converter {
 
   }
 
+  def getLastCell(cell: Cell) : Cell = null
+
+
   def makeHtmlByAbstructDatas(rootCell:Cell):String = {
     """<html>
         <body>

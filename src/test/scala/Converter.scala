@@ -14,7 +14,7 @@ class ConverterSpec extends Specification {
     , List("11", "12", "16", "17")
     , List("11", "18", "19", "20")
     , List("11", "other", "19", "21")
-    , List("other", "12", "19", "17")
+    , List("other", "12", "19", "last")
   )
 
   val treeTextMap = Map(
@@ -42,11 +42,47 @@ class ConverterSpec extends Specification {
     , "other" -> Map(
       "12" -> Map(
         "19" -> Map(
-          "17" -> Map()
+          "last" -> Map()
         )
       )
     )
   )
+
+  val resultlHtml = <html>
+    <body>
+      <table border="1">
+        <tr>
+          <td rowspan="5">11</td>
+          <td rowspan="3">12</td>
+          <td rowspan="2">13</td>
+          <td>14</td>
+        </tr>
+        <tr>
+          <td>other</td>
+        </tr>
+        <tr>
+          <td>16</td>
+          <td>17</td>
+        </tr>
+        <tr>
+          <td>18</td>
+          <td>19</td>
+          <td>20</td>
+        </tr>
+        <tr>
+          <td>other</td>
+          <td>19</td>
+          <td>21</td>
+        </tr>
+        <tr>
+          <td>other</td>
+          <td>12</td>
+          <td>19</td>
+          <td>last</td>
+        </tr>
+      </table>
+    </body>
+  </html>
 
   // Utility Method for Test
 
@@ -127,41 +163,7 @@ class ConverterSpec extends Specification {
       val baseTree = convertMapToCells(treeTextMap, createRootCell)
 
       // 確認用のHTML(ScalaのXMLオブジェクト)
-      val expected = <html>
-        <body>
-          <table border="1">
-            <tr>
-              <td rowspan="5">11</td>
-              <td rowspan="3">12</td>
-              <td rowspan="2">13</td>
-              <td>14</td>
-            </tr>
-            <tr>
-              <td>other</td>
-            </tr>
-            <tr>
-              <td>16</td>
-              <td>17</td>
-            </tr>
-            <tr>
-              <td>18</td>
-              <td>19</td>
-              <td>20</td>
-            </tr>
-            <tr>
-              <td>other</td>
-              <td>19</td>
-              <td>21</td>
-            </tr>
-            <tr>
-              <td>other</td>
-              <td>12</td>
-              <td>19</td>
-              <td>17</td>
-            </tr>
-          </table>
-        </body>
-      </html>
+      val expected = resultlHtml
 
       // テスト対象を実行。
       val actualString = Converter.makeHtmlByAbstructDatas(baseTree)
@@ -210,6 +212,16 @@ class ConverterSpec extends Specification {
 
     }
 
+    "Cell型のツリー上から「最後のもの」を取得する" in {
+      // 元となるツリーデータを取得
+      val baseTree = convertMapToCells(treeTextMap, createRootCell)
+
+      // Test対象の実行
+      val actual = Converter.getLastCell(baseTree)
+
+      actual.value must equalTo("last")
+
+    }
 
   }
 
