@@ -17,7 +17,15 @@ case class Cell(value: String, children: mutable.LinkedHashMap[String, Cell])
 object Converter {
 
   def convertCsvToHtml(csvFile: String): String = {
-    return csvFile
+    // TODO 仮実装 まぁ、しょうが無いわな
+    """<html>
+<body>
+<table border="1">
+  <tr>
+  </tr>
+</table>
+</body>
+</html>"""
   }
 
   def loadFileToList(filePath: String): List[String] = Source.fromFile(filePath).getLines().toList

@@ -9,6 +9,11 @@ class ConverterSpec extends Specification {
 
   // Test Datas
 
+  val testCsvFilePath = "target/scala-2.11/test-classes/Data.csv"
+
+  val testHtmlFileForExpectedPath = "target/scala-2.11/test-classes/Data.html"
+
+
   val csvTextList = List(
     List("11", "12", "13", "14")
     , List("11", "12", "13", "other")
@@ -104,13 +109,14 @@ class ConverterSpec extends Specification {
   // RootになるCell型オブジェクトを作成するエイリアス。
   def createRootCell() = Cell("root", new mutable.LinkedHashMap[String, Cell])
 
+  // Test用のCell型ツリーオブジェクトを取得するエイリアス。
+  def createBaseTreeForTest() = convertMapToCells(treeTextMap, createRootCell())
 
   // Tests
 
   "コンバーターでファイルを読む" should {
     "ファイル指定で読み込みリストに格納" in {
-      val csv = "target/scala-2.11/test-classes/Data.csv"
-      val actual = Converter.loadFileToList(csv)
+      val actual = Converter.loadFileToList(testCsvFilePath)
 
       actual.size must equalTo(35)
 
@@ -146,7 +152,7 @@ class ConverterSpec extends Specification {
     "グルーピングをしたツリー作成" in {
 
       // 空のCellを材料に、Mapを投影する。
-      val expected = convertMapToCells(treeTextMap, createRootCell)
+      val expected = createBaseTreeForTest()
 
       //  Test対象の実行。
       val actual = Converter.valueListToAbstractDatas(csvTextList)
@@ -161,7 +167,7 @@ class ConverterSpec extends Specification {
     "Cell型オブジェク卜の内部ツリーからHTMLのテキストへ" in {
 
       // HTMLの元となるデータ
-      val baseTree = convertMapToCells(treeTextMap, createRootCell)
+      val baseTree = createBaseTreeForTest()
 
       // 確認用のHTML(ScalaのXMLオブジェクト)
       val expected = Utility.trim(resultlHtml) // XMLオブジェクトはそのまま比較すると空白などにも敏感に比較するので整え
@@ -179,7 +185,7 @@ class ConverterSpec extends Specification {
 
     "Cell型のツリー上から「自分から繋がる末端データはいくつあるか」を調べる" in {
       // 元となるツリーデータを取得
-      val baseTree = convertMapToCells(treeTextMap, createRootCell)
+      val baseTree = createBaseTreeForTest()
 
       // Test対象の実行
       val actual = Converter.analyzeEndCellCount(baseTree)
@@ -190,7 +196,7 @@ class ConverterSpec extends Specification {
 
     "Cell型のツリー上から「自分から繋がる末端データ」を途中からでも出せる" in {
       // 元となるツリーデータを取得
-      val baseTree = convertMapToCells(treeTextMap, createRootCell)
+      val baseTree = createBaseTreeForTest()
 
       def enRouteItemTest(key: String, expected: Int) = {
 
@@ -212,7 +218,7 @@ class ConverterSpec extends Specification {
 
     "Cell型のツリー上から「最後のもの」を取得する" in {
       // 元となるツリーデータを取得
-      val baseTree = convertMapToCells(treeTextMap, createRootCell)
+      val baseTree = createBaseTreeForTest()
 
       // Test対象の実行
       val actual = Converter.getLastCell(baseTree)
@@ -221,6 +227,19 @@ class ConverterSpec extends Specification {
 
     }
 
+  }
+
+  "CSVをHTMLにコンバートする" should {
+    "CSVファイルを読み込みHTMLのテキストへと変換し内容を精査" in {
+      // 予め「確認用正解ファイル」を読み込んでおく
+      val expected = Utility.trim(XML.loadFile(testHtmlFileForExpectedPath))
+      // 検証対象を実行
+      val result = Converter.convertCsvToHtml(testCsvFilePath)
+      // 結果の文字列データを比較可能なXMLオブジェクトに変換
+      val actual = Utility.trim(XML.loadString(result))
+      // 結果確認
+      actual must equalTo(expected)
+    }
   }
 
 }
