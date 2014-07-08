@@ -55,44 +55,28 @@ object Converter {
     if (map.isEmpty) 1 else map.values.foldLeft(0){ (count,item) => count + analyzeEndCellCount(item) }
   }
 
+  def createTableDetail(cell:Cell):String = {
+    val map = cell.children
+    val trTags = if (map.isEmpty) "</tr>\n<tr>\n" else ""
+
+    val rowSpanCount = analyzeEndCellCount(cell)
+    val rs = if (rowSpanCount > 1) " rowspan=\"" + rowSpanCount + "\"" else ""
+    val tdTag = if (cell.value == "root") "" else  "  <td" + rs + ">" + cell.value + "</td>\n"
+
+    tdTag + trTags + map.values.foldLeft(""){ (html,item) => html + createTableDetail(item) }
+
+  }
+
   def makeHtmlByAbstructDatas(rootCell:Cell):String = {
-    // FIXME 仮実装。気持ち悪い。
     """<html>
         <body>
           <table border="1">
             <tr>
-              <td rowspan="5">11</td>
-              <td rowspan="3">12</td>
-              <td rowspan="2">13</td>
-              <td>14</td>
-            </tr>
-            <tr>
-              <td>other</td>
-            </tr>
-            <tr>
-              <td>16</td>
-              <td>17</td>
-            </tr>
-            <tr>
-              <td>18</td>
-              <td>19</td>
-              <td>20</td>
-            </tr>
-            <tr>
-              <td>other</td>
-              <td>19</td>
-              <td>21</td>
-            </tr>
-            <tr>
-              <td>other</td>
-              <td>12</td>
-              <td>19</td>
-              <td>17</td>
+""" + createTableDetail(rootCell) + """
             </tr>
           </table>
         </body>
       </html>"""
-
   }
 
 }
