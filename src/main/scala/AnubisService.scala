@@ -9,14 +9,14 @@ class AnubisServiceConf(arguments: Seq[String]) extends ScallopConf(arguments) {
   footer("\n for all other information, see [url]")
 
   val convertType = opt[String]("convertType", default = Some("html"), short = 't')
-  val source = opt[String]("source", short = 's')
+  val source = opt[String]("source", short = 's',required = true)
 }
 
 
 object AnubisService {
   def main(args: Array[String]){
     val conf = new AnubisServiceConf(args)
-    val result = Converter.convertCsvToHtml(conf.source.toString())
+    val result = Converter.convertCsvToHtml(conf.source.apply())
     println(result)
   }
 }
