@@ -18,7 +18,7 @@ scalacOptions in Test ++= Seq("-Yrangepos")
 
 resolvers ++= Seq("snapshots", "releases").map(Resolver.sonatypeRepo)
 
-initialCommands := "import com.github.kazuhito_m.anubisservice._"
+initialCommands := "import com.github.kazuhito_m.anubisservice.parser._"
 
 ideaExcludeFolders += ".idea"
 

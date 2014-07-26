@@ -1,28 +1,13 @@
-package com.github.kazuhito_m.anubisservice
+package com.github.kazuhito_m.anubisservice.commons
 
-import scala.io.Source
 import scala.Predef._
-import scala.collection.mutable
-
-/**
- * 抽象データを表すケースクラス。
- * @param value データの値(文字列)。
- * @param children 表中、右側にぶら下がるデータ。グルーピングされているなら複数ぶら下がる。
- */
-case class Cell(value: String, children: mutable.LinkedHashMap[String, Cell])
-
-/**
- * ポリモフィズム用のコンバーターの既定トレイト。
- */
-trait BaseConverter {
-  def convert(source: String) : String
-}
+import com.github.kazuhito_m.anubisservice.converter.{BaseConverter, CsvToHtmlConverter}
 
 
 /**
  * Created by kazuhito on 14/07/07.
  */
-object Converter {
+object Analyzer {
 
   /**
    * メインメソッド。
@@ -34,7 +19,7 @@ object Converter {
   def convert(convertType: String, source: String): String = selectConverter(convertType).convert(source)
 
   // コンバートのタイプから、適したコンバータを返す。
-  def selectConverter(convertType: String) = {
+  def selectConverter(convertType: String): BaseConverter = {
     convertType match {
       case "xxx" => new BaseConverter { def convert(source: String): String = "" }  // ダミー
       case _ => new CsvToHtmlConverter()  // デフォルトは”ｈｔｍｌ”指定とみなす。

@@ -1,6 +1,7 @@
 package com.github.kazuhito_m.anubisservice
 
 import org.rogach.scallop._
+import com.github.kazuhito_m.anubisservice.commons.Analyzer
 
 
 class AnubisServiceConf(arguments: Seq[String]) extends ScallopConf(arguments) {
@@ -16,7 +17,7 @@ class AnubisServiceConf(arguments: Seq[String]) extends ScallopConf(arguments) {
 object AnubisService {
   def main(args: Array[String]){
     val conf = new AnubisServiceConf(args)
-    val result = Converter.convert(conf.convertType.apply(), conf.source.apply())
+    val result = Analyzer.convert(conf.convertType.apply(), conf.source.apply())
     println(result)
   }
 }

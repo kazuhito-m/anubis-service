@@ -1,11 +1,11 @@
-package com.github.kazuhito_m.anubisservice
+package com.github.kazuhito_m.anubisservice.commons
 
 import org.specs2.mutable._
 import scala.collection.mutable
 import scala.xml.XML
 import scala.xml.Utility
 
-class ConverterSpec extends Specification {
+class AnalyzerSpec extends Specification {
 
   // Test Datas
 
