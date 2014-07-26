@@ -16,7 +16,7 @@ class AnubisServiceConf(arguments: Seq[String]) extends ScallopConf(arguments) {
 object AnubisService {
   def main(args: Array[String]){
     val conf = new AnubisServiceConf(args)
-    val result = Converter.convertCsvToHtml(conf.source.apply())
+    val result = Converter.convert(conf.convertType.apply(), conf.source.apply())
     println(result)
   }
 }
