@@ -6,7 +6,7 @@ import scala.io.Source
 /**
  * Created by kazuhito on 14/07/26.
  */
-class CsvToHtmlConverter {
+class CsvToHtmlConverter extends BaseConverter {
 
   /**
    * メインメソッド。

@@ -12,6 +12,14 @@ import scala.collection.mutable
 case class Cell(value: String, children: mutable.LinkedHashMap[String, Cell])
 
 /**
+ * ポリモフィズム用のコンバーターの既定トレイト。
+ */
+trait BaseConverter {
+  def convert(source: String) : String
+}
+
+
+/**
  * Created by kazuhito on 14/07/07.
  */
 object Converter {
@@ -23,14 +31,14 @@ object Converter {
    * @param source 変換対象となる元情報(ファイルパス,URL,etc...)。
    * @return 変換結果の文字列表現。
    */
-  def convert(convertType: String, source: String): String = {
+  def convert(convertType: String, source: String): String = selectConverter(convertType).convert(source)
+
+  // コンバートのタイプから、適したコンバータを返す。
+  def selectConverter(convertType: String) = {
     convertType match {
-      case "xxx" =>
-        ""
-      case _ =>   // デフォルトは”ｈｔｍｌ”指定とみなす。
-        (new CsvToHtmlConverter()).convert(source)
+      case "xxx" => new BaseConverter { def convert(source: String): String = "" }  // ダミー
+      case _ => new CsvToHtmlConverter()  // デフォルトは”ｈｔｍｌ”指定とみなす。
     }
   }
-
 
 }
