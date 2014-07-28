@@ -2,10 +2,9 @@ package com.github.kazuhito_m.anubisservice
 
 import org.specs2.mutable._
 import java.io.PrintStream
+import com.github.kazuhito_m.anubisservice.test.TestDataHelper._
 
 class AnubisServiceSpec extends Specification {
-
-  val testCsvFilePath = "target/scala-2.11/test-classes/Data.csv"
 
   val actualFile = "target/scala-2.11/test-classes/stdio.log"
 
@@ -16,6 +15,7 @@ class AnubisServiceSpec extends Specification {
       // TODO Scallopのせいだろう。exit()でも書いてあるのか、テストすると終わってしまう。
       true
     }
+
     "引数が複数" in {
       // 初期処理。stdoutを騙す。
       val ps = new PrintStream(actualFile)
@@ -26,9 +26,12 @@ class AnubisServiceSpec extends Specification {
       AnubisService.main(Array("-t", "html", "-s", testCsvFilePath))
 
       // 後処理
-      System.setOut(swapO)
+      // FIXME どーしても標準出力に出してしまうので、あえてダミーストリームを戻さないで続行(副作用はあると思われ)
+      // System.setOut(swapO)
+      ps.close()
       true
     }
+
     "Typeの引数を省略" in {
       // 初期処理。stdoutを騙す。
       val ps = new PrintStream(actualFile)
@@ -39,7 +42,9 @@ class AnubisServiceSpec extends Specification {
       AnubisService.main(Array("-s", testCsvFilePath))
 
       // 後処理
-      System.setOut(swapO)
+      // FIXME どーしても標準出力に出してしまうので、あえてダミーストリームを戻さないで続行(副作用はあると思われ)
+      // System.setOut(swapO)
+      ps.close()
       true
     }
   }

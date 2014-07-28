@@ -21,8 +21,10 @@ object Analyzer {
   // コンバートのタイプから、適したコンバータを返す。
   def selectConverter(convertType: String): BaseConverter = {
     convertType match {
-      case "xxx" => new BaseConverter { def convert(source: String): String = "" }  // ダミー
-      case _ => new CsvToHtmlConverter()  // デフォルトは”ｈｔｍｌ”指定とみなす。
+      case "xxx" => new BaseConverter {
+        def convert(source: String): String = ""
+      } // ダミー
+      case _ => new CsvToHtmlConverter() // デフォルトは”ｈｔｍｌ”指定とみなす。
     }
   }
 

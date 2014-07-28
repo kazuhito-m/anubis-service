@@ -6,5 +6,5 @@ import scala.Predef._
  * ポリモフィズム用のコンバーターの既定トレイト。
  */
 trait BaseConverter {
-  def convert(source: String) : String
+  def convert(source: String): String
 }
